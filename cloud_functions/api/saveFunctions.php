@@ -316,6 +316,80 @@ class Save
         echo json_encode($msg);
     }
 
+    public function deleteGaleryImage()
+    {
+        $msg = array();
+        if (isset($_POST)) {
+
+            $msg["error"] = "";
+            $msg["state"] = "";
+
+            $id  = trim(mysqli_real_escape_string(constants::connect(), $_POST['id']));
+            $image = isset($_POST['path']) && !empty($_POST['path']) ? trim(mysqli_real_escape_string(constants::connect(), $_POST['path'])) : null;
+
+            if ($id == "" || $image == "") {
+                $msg["error"] .= 'Donnees invalides';
+            } else {
+                try {
+                    if (isset($image)) {
+                        unlink('.' . $image);
+                    }
+                    $querry1 = "DELETE FROM `galery_images` WHERE id=$id";
+                    $res = mysqli_query(Constants::connect(), $querry1);
+                    if ($res) {
+                        $msg["state"] = "success";
+                    } else
+                        $msg["error"] .= "Server error while saving";
+                } catch (Exception $e) {
+                    $msg["error"] = "server error";
+                    Constants::connect()->rollback();
+                }
+            }
+
+            mysqli_close(Constants::connect());
+        } else {
+            $msg["error"] .= 'Data not received';
+        }
+        echo json_encode($msg);
+    }
+
+    public function deleteNews()
+    {
+        $msg = array();
+        if (isset($_POST)) {
+
+            $msg["error"] = "";
+            $msg["state"] = "";
+
+            $id  = trim(mysqli_real_escape_string(constants::connect(), $_POST['id']));
+            $image = isset($_POST['path']) && !empty($_POST['path']) ? trim(mysqli_real_escape_string(constants::connect(), $_POST['path'])) : null;
+
+            if ($id == "") {
+                $msg["error"] .= 'Donnees invalides';
+            } else {
+                try {
+                    if (isset($image) && !empty($image)) {
+                        unlink('.' . $image);
+                    }
+                    $querry1 = "DELETE FROM `news` WHERE id=$id";
+                    $res = mysqli_query(Constants::connect(), $querry1);
+                    if ($res) {
+                        $msg["state"] = "success";
+                    } else
+                        $msg["error"] .= "Server error while saving";
+                } catch (Exception $e) {
+                    $msg["error"] = "server error";
+                    Constants::connect()->rollback();
+                }
+            }
+
+            mysqli_close(Constants::connect());
+        } else {
+            $msg["error"] .= 'Data not received';
+        }
+        echo json_encode($msg);
+    }
+
     public function updateAgentPwd()
     {
         if (isset($_POST)) {
@@ -345,34 +419,6 @@ class Save
         }
         echo json_encode($msg);
     }
-
-    public function saveCard()
-    {
-        if (isset($_POST)) {
-            $msg = "";
-            $cardID = trim(mysqli_real_escape_string(Constants::connect(), $_POST['cardID']));
-            $ville = trim(mysqli_real_escape_string(Constants::connect(), $_POST['ville']));
-            if ($cardID == "") {
-                $msg = "Donnees invalides";
-            } else {
-                $checkAccount = "SELECT * FROM carte where id_carte='$cardID'";
-                $response = mysqli_query(Constants::connect(), $checkAccount);
-                if (mysqli_num_rows($response) >= 1) {
-                    $msg = "Cette carte est deja enregistrée";
-                } else {
-                    $query = "insert into `carte`(id_carte, status, ville) values('$cardID', 'Active','$ville');";
-                    $res = mysqli_query(Constants::connect(), $query);
-                    if ($res)
-                        $msg = "success";
-                    else
-                        $msg = "Server error";
-                }
-            }
-        } else {
-            $msg = 'Data not received';
-        }
-        echo json_encode($msg);
-    }
 }
 $saveInstance = new Save();
 if (strtolower($_POST['transaction']) == "addevent") {
@@ -383,10 +429,10 @@ if (strtolower($_POST['transaction']) == "addevent") {
     $saveInstance->saveNews();
 } else if (strtolower($_POST['transaction']) == "addimage") {
     $saveInstance->saveGaleryImage();
-}
-// else if (strtolower($_POST['transaction']) == "payment") {
-//     $saveInstance->controlTicket();
-// } 
-else {
+} else if (strtolower($_POST['transaction']) == "deleteimage") {
+    $saveInstance->deleteGaleryImage();
+} else if (strtolower($_POST['transaction']) == "deletenews") {
+    $saveInstance->deleteNews();
+} else {
     echo 'no transaction';
 }

@@ -16,7 +16,7 @@ class Constants
 
 	public static function connect()
 	{
-		$con = new mysqli("127.0.0.1", "root", "root", "malaika", 8889) or die("Unable to connect to database");
+		$con = new mysqli("127.0.0.1", "root", "", "malaika", 3306) or die("Unable to connect to database");
 		if ($con->connect_error) {
 			return null;
 		} else {

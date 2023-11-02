@@ -81,4 +81,22 @@ class NewsProvider extends ChangeNotifier {
         dataList.length > 3 ? dataList.sublist(0, 3).toList() : dataList;
     notifyListeners();
   }
+
+  deleteNews({required NewsModel data}) async {
+    var response = await AppProviders.appProvider.httpPost(
+        url: BaseUrl.saveData,
+        body: {"transaction": "deletenews", "id": data.id, "path": data.image});
+
+    if (response.statusCode == 200) {
+      if (jsonDecode(response.body) is String) return;
+      if (jsonDecode(response.body)['state'].toString().toLowerCase() ==
+          'ssucess') {
+        offlineData.removeWhere((element) => element.id == data.id);
+        latestData = offlineData.length > 3
+            ? offlineData.sublist(0, 3).toList()
+            : offlineData;
+        notifyListeners();
+      }
+    }
+  }
 }

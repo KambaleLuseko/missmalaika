@@ -168,6 +168,27 @@ class _NewsListPageState extends State<NewsListPage> {
                                       color: AppColors.kBlackColor,
                                     ),
                                   ),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Dialogs.showDialogWithAction(
+                                        title: "Confirmatiio",
+                                        content:
+                                            "Vous allez supprimer cet article du site.\nVoulez-vous continuer?",
+                                        callback: () {
+                                          context
+                                              .read<NewsProvider>()
+                                              .deleteNews(
+                                                  data: offlineData[index]);
+                                        });
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Icon(
+                                      Icons.delete_rounded,
+                                      color: AppColors.kRedColor,
+                                    ),
+                                  ),
                                 )
                               ],
                             )),
