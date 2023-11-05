@@ -35,8 +35,12 @@ if ($_POST['transaction'] == 'login') {
     else
         $sql = "SELECT * FROM candidate_payments WHERE LOWER(action)='vote' AND isPayed=1";
 } else if (strtolower($_POST['transaction']) == "getevent") {
-    // $agentID=trim(mysqli_real_escape_string(Constants::connect(),$_POST['agentID']));
-    $sql = "SELECT * from `events` where state='Pending' or state='Running'";
+
+    $filter = trim(mysqli_real_escape_string(Constants::connect(), $_POST['filter']));
+    if (strtolower($filter) == 'all') {
+        $sql = "SELECT * from `events`";
+    } else
+        $sql = "SELECT * from `events` where state='Pending' or state='Running'";
 } else if (strtolower($_POST['transaction']) == "getnews") {
     if (!isset($_POST['filter']) || strtolower(trim($_POST['filter'])) == 'none') {
         $sql = "SELECT * FROM news ORDER BY id DESC";

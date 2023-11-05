@@ -48,9 +48,9 @@ dependencies:
   html_editor_enhanced: ^2.5.1
   flutter_widget_from_html:
   date_count_down: ^3.0.0
-  youtube_player_flutter: ^8.1.0
   flutter_map: ^4.0.0
   latlong2:
+
 
 dev_dependencies:
   flutter_test:

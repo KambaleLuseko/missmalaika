@@ -54,4 +54,3 @@ if (strtolower($action) == 'inscription') {
 $req .= "UPDATE  `candidate_payments`SET isPayed=1 WHERE userUUID='$userUUID' AND event_id='$eventID' AND payment_reference='$reference';";
 $res = mysqli_multi_query(Constants::connect(), $req);
 echo $req;
-print($req);

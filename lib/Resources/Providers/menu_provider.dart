@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:missmalaika/Views/Admin/admin.main.page.dart';
 import 'package:provider/provider.dart';
 
 import '../../Resources/Models/Menu/menu.model.dart';
@@ -53,7 +54,16 @@ class MenuProvider extends ChangeNotifier {
     //     icon: Icons.developer_mode_rounded),
   ];
 
-  initMenu() {
+  initMenu({bool? isAdmin = false}) {
+    if (isAdmin == true) {
+      menus.add(
+        MenuModel(
+            title: "Admin",
+            page: const AdminMainPage(),
+            icon: FontAwesomeIcons.home),
+      );
+      return;
+    }
     menus.clear();
     menus.addAll([
       MenuModel(

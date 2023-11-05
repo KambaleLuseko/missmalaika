@@ -43,7 +43,7 @@ class AppColors {
 class BaseUrl {
   // static String ip = "http://asmontruwenzori.org/cloud_functions/api";
   // static String ip = "http://127.0.0.1:8000";
-  // static String ip = "https://testprojects01.000webhostapp.com/malaika/api";
+  static String mailIP = "https://testprojects01.000webhostapp.com/malaika/api";
   static String ip = "https://missmalaikardc.com/api";
   // static String ip = "http://app.missmalaikardc.com/api";
   static String paymentURL = "$ip/vendor-frameworks/php/flexpayapi.php";

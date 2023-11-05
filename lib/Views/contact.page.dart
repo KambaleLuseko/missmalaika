@@ -220,6 +220,7 @@ class _ContactPageState extends State<ContactPage> {
                         textColor: AppColors.kBlackColor,
                         backColor: AppColors.kTextFormBackColor),
                     CustomButton(
+                        canSync: true,
                         text: "J'envoi le message",
                         backColor: AppColors.kPrimaryColor,
                         textColor: AppColors.kWhiteColor,

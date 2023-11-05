@@ -1,3 +1,5 @@
+import 'package:missmalaika/Views/Admin/Events/controller/event.provider.dart';
+
 import 'Views/Admin/Galery/controller/gallery.provider.dart';
 
 import 'Views/Admin/News/controller/news.provider.dart';
@@ -37,6 +39,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => DashboardProvider()),
         ChangeNotifierProvider(create: (_) => NewsProvider()),
         ChangeNotifierProvider(create: (_) => GalleryProvider()),
+        ChangeNotifierProvider(create: (_) => EventProvider()),
       ],
       child: MaterialApp(
         title: 'Miss Malaika',

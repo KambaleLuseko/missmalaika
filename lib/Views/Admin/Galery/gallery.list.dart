@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:missmalaika/Resources/Providers/users_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../../Resources/Components/dialogs.dart';
@@ -171,39 +172,41 @@ class _GaleryItemWidgetState extends State<GaleryItemWidget> {
                       ),
                     ),
                   ),
-                  Positioned(
-                      top: 0,
-                      right: 0,
-                      child: GestureDetector(
-                        onTap: () {
-                          Dialogs.showDialogWithAction(
-                              title: "Confirmatiio",
-                              content:
-                                  "Vous allez supprimer cette image de la gallerie.\nVoulez-vous continuer?",
-                              callback: () {
-                                context
-                                    .read<GalleryProvider>()
-                                    .deleteImage(data: widget.data);
-                              });
-                        },
-                        child: MouseRegion(
-                          cursor: SystemMouseCursors.click,
-                          child: Card(
-                              margin: EdgeInsets.zero,
-                              elevation: 0,
-                              color: AppColors.kRedColor,
-                              shape: const RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(8))),
-                              child: Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Icon(
-                                  Icons.delete_rounded,
-                                  color: AppColors.kWhiteColor,
-                                ),
-                              )),
-                        ),
-                      ))
+                  if (context.read<UserProvider>().connectedUser?['admin'] !=
+                      null)
+                    Positioned(
+                        top: 0,
+                        right: 0,
+                        child: GestureDetector(
+                          onTap: () {
+                            Dialogs.showDialogWithAction(
+                                title: "Confirmatiio",
+                                content:
+                                    "Vous allez supprimer cette image de la gallerie.\nVoulez-vous continuer?",
+                                callback: () {
+                                  context
+                                      .read<GalleryProvider>()
+                                      .deleteImage(data: widget.data);
+                                });
+                          },
+                          child: MouseRegion(
+                            cursor: SystemMouseCursors.click,
+                            child: Card(
+                                margin: EdgeInsets.zero,
+                                elevation: 0,
+                                color: AppColors.kRedColor,
+                                shape: const RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(8))),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: Icon(
+                                    Icons.delete_rounded,
+                                    color: AppColors.kWhiteColor,
+                                  ),
+                                )),
+                          ),
+                        ))
                 ],
               ),
             ),

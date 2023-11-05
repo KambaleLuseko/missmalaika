@@ -56,7 +56,7 @@ class AppStateProvider extends ChangeNotifier {
             body: body,
           )
           .timeout(Duration(seconds: timeOut));
-      print("post ${response.body} post");
+      // print("post ${response.body} post");
       changeAppState();
       // print('changing state');
       return response;

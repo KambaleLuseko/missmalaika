@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import '../../../Resources/Components/button.dart';
-import '../../../Resources/Components/dialogs.dart';
-import '../../../Resources/Components/texts.dart';
-import '../../../Resources/Constants/global_variables.dart';
-import 'add_galery.page.dart';
-import 'controller/gallery.provider.dart';
-import 'gallery.list.dart';
-import '../../parent.page.dart';
+import 'package:missmalaika/Resources/Components/button.dart';
+import 'package:missmalaika/Resources/Components/dialogs.dart';
+import 'package:missmalaika/Resources/Components/texts.dart';
+import 'package:missmalaika/Resources/Constants/global_variables.dart';
+import 'package:missmalaika/Views/Admin/Events/controller/event.provider.dart';
+import 'package:missmalaika/Views/Admin/Events/view/add_event.page.dart';
+import 'package:missmalaika/Views/Admin/Events/view/event.list.dart';
+import 'package:missmalaika/Views/parent.page.dart';
 import 'package:provider/provider.dart';
 
-class GaleryPage extends StatelessWidget {
-  const GaleryPage({super.key});
+class EventPage extends StatelessWidget {
+  const EventPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class GaleryPage extends StatelessWidget {
         listData: Column(
           children: [
             TextWidgets.textBold(
-                title: 'Gérer la galerie',
+                title: 'Gérer les événements',
                 fontSize: 18,
                 textColor: AppColors.kBlackColor),
             Row(
@@ -27,17 +27,17 @@ class GaleryPage extends StatelessWidget {
                 CustomButton(
                     size: 180,
                     icon: Icons.add,
-                    text: 'Ajouter une image',
+                    text: 'Ajouter un événement',
                     backColor: AppColors.kPrimaryColor,
                     textColor: AppColors.kWhiteColor,
                     callback: () {
-                      Dialogs.showModal(child: const AddImageGaleryPage());
+                      Dialogs.showModal(child: NewEventPage());
                     }),
                 IconButton(
                     onPressed: () {
                       context
-                          .read<GalleryProvider>()
-                          .getOnline(value: 'none', isRefresh: true);
+                          .read<EventProvider>()
+                          .getOnline(value: 'all', isRefresh: true);
                     },
                     icon: Icon(
                       Icons.autorenew,
@@ -48,9 +48,7 @@ class GaleryPage extends StatelessWidget {
             const SizedBox(
               height: 24,
             ),
-            const Expanded(
-              child: GalleryListPage(),
-            )
+            const Expanded(child: EventListPage())
           ],
         ),
         callback: () {});

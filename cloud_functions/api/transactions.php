@@ -5,7 +5,7 @@ if (isset($_POST)) {
         $mainData = array();
 
         if (Constants::connect() != null) {
-            $query = "SELECT tusers.*,event_candidates.isActive AS status, (SELECT path FROM candidate_images WHERE candidate_uuid=tusers.uuid ORDER BY id DESC LIMIT 1) AS imageUrl FROM tusers INNER JOIN event_candidates ON event_candidates.candidate_uuid=tusers.uuid INNER JOIN events ON event_candidates.event_id=events.id WHERE LOWER(role)='candidate' AND event_candidates.isActive=2 AND events.isActive=1 ORDER BY id DESC";
+            $query = "SELECT tusers.*,event_candidates.isActive AS status, (SELECT path FROM candidate_images WHERE candidate_uuid=tusers.uuid ORDER BY id DESC LIMIT 1) AS imageUrl FROM tusers INNER JOIN event_candidates ON event_candidates.candidate_uuid=tusers.uuid INNER JOIN events ON event_candidates.event_id=events.id WHERE LOWER(role)='candidate' AND event_candidates.isActive=2 AND events.isActive=1 ORDER BY RAND()";
             if (isset($_POST['username']) && isset($_POST['password']) && !empty($_POST['username']) && !empty($_POST['password'])) {
                 $username = trim(mysqli_real_escape_string(constants::connect(), $_POST['username']));
                 $password = trim(mysqli_real_escape_string(constants::connect(), $_POST['password']));

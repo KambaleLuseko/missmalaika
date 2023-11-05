@@ -89,6 +89,9 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                             "password": _pwdCtrller.text.toString().trim(),
                           },
                           callback: () {
+                            context
+                                .read<MenuProvider>()
+                                .initMenu(isAdmin: true);
                             // Navigator.pop(context);
                             context.read<MenuProvider>().setActivePage(
                                 newPage: MenuModel(

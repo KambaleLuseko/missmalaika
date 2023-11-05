@@ -200,3 +200,23 @@ class FlexWidget extends StatelessWidget {
     );
   }
 }
+
+Future<String?> showDatePickerWidget() async {
+  Duration startDate = const Duration(days: 365 * 100);
+  DateTime? pickedDate = await showDatePicker(
+      builder: (context, child) => Theme(
+          data: Theme.of(context).copyWith(
+              colorScheme: ColorScheme.light(
+            primary: AppColors.kPrimaryColor,
+            // onPrimary: AppColors.kWhiteColor,
+          )),
+          child: child!),
+      context: navKey.currentContext!,
+      initialDate: DateTime.now().subtract(const Duration(days: 30)),
+      firstDate: DateTime.now().subtract(startDate),
+      lastDate: DateTime.now());
+  if (pickedDate == null) {
+    return null;
+  }
+  return pickedDate.toString();
+}

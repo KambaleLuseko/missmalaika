@@ -1,7 +1,8 @@
 <?php
+include_once '../../config.php';
 $action = isset($_GET['action']) ? trim(htmlentities($_GET['action'])) : "Inscription";
 $amount = isset($_GET['amount']) ? trim(htmlentities($_GET['amount'])) : 1;
-$ccurrency = "USD";
+$currency = "USD";
 $points = 0;
 $userUUID = isset($_GET['candidate']) ? trim(htmlentities($_GET['candidate'])) : null;
 $eventID = isset($_GET['event_id']) ? trim(htmlentities($_GET['event_id'])) : null;

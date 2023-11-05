@@ -1,7 +1,9 @@
 import 'package:date_count_down/date_count_down.dart';
 import 'package:flutter_carousel_slider/carousel_slider.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:missmalaika/Resources/Components/dialogs.dart';
+import 'package:missmalaika/Views/Candidates/view/new-candidate.page.dart';
 import 'footer.widget.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../../Resources/Components/button.dart';
 import '../../Resources/Constants/responsive.dart';
 
@@ -28,34 +30,10 @@ class _HomePageState extends State<HomePage> {
   ];
 
   final List<String> sliderImgs = const ["img-1.jpg", "img-2.jpg", "img-3.jpg"];
-
-  YoutubePlayerController? _controller;
   @override
   void initState() {
-    _controller = YoutubePlayerController(
-      initialVideoId: YoutubePlayer.convertUrlToId(
-              "https://www.youtube.com/watch?v=9QM0hVaJbUI") ??
-          '9QM0hVaJbUI',
-      flags: const YoutubePlayerFlags(
-        autoPlay: false,
-        mute: true,
-        isLive: false,
-      ),
-    );
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      // _controller = YoutubePlayerController(
-      //   initialVideoId: YoutubePlayer.convertUrlToId(
-      //           "https://www.youtube.com/watch?v=9QM0hVaJbUI") ??
-      //       '9QM0hVaJbUI',
-      //   flags: const YoutubePlayerFlags(
-      //     autoPlay: false,
-      //     mute: true,
-      //     isLive: false,
-      //   ),
-      // );
-      // setState(() {});
-    });
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {});
   }
 
   @override
@@ -147,10 +125,14 @@ class _HomePageState extends State<HomePage> {
                                 ),
                                 CustomButton(
                                     size: 300,
-                                    text: 'Voter une candidate',
+                                    text: "Je m'inscris",
                                     backColor: AppColors.kPrimaryColor,
                                     textColor: AppColors.kWhiteColor,
-                                    callback: () {})
+                                    callback: () {
+                                      Dialogs.showPositionedModal(
+                                          // title: "",
+                                          child: const NewCandidatePage());
+                                    })
                               ],
                             ),
                           ),
@@ -191,7 +173,7 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       Row(),
                       TextWidgets.text300(
-                          title: "La finale approche",
+                          title: "Les votes approchent",
                           fontSize: 16,
                           textColor: AppColors.kWhiteColor),
                       const SizedBox(
@@ -211,7 +193,7 @@ class _HomePageState extends State<HomePage> {
                         : FlexFit.tight,
                     flex: 3,
                     child: FittedBox(
-                      fit: BoxFit.none,
+                      fit: BoxFit.contain,
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -223,7 +205,7 @@ class _HomePageState extends State<HomePage> {
                                 due: DateTime.parse('2024-01-01'),
                                 finishedText: "Done",
                                 showLabel: true,
-                                longDateName: true,
+                                // longDateName: true,
                                 daysTextLong: "j ",
                                 hoursTextLong: "h ",
                                 minutesTextLong: "m ",
@@ -256,37 +238,12 @@ class _HomePageState extends State<HomePage> {
                   flex: 2,
                   // fit: FlexFit.tight,
                   child: Container(
-                    height: 400,
+                    height: 315,
                     padding: EdgeInsets.zero,
                     child: ClipRRect(
                         borderRadius: BorderRadius.circular(4),
-                        child: _controller != null
-                            ? YoutubePlayerBuilder(
-                                player: YoutubePlayer(
-                                  controller: _controller!,
-                                  showVideoProgressIndicator: true,
-                                  progressIndicatorColor: Colors.amber,
-                                  progressColors: const ProgressBarColors(
-                                    playedColor: Colors.amber,
-                                    handleColor: Colors.amberAccent,
-                                  ),
-                                ),
-                                builder: (context, player) {
-                                  return Scaffold(
-                                    appBar: AppBar(
-                                      title: const Text("Youtube Player"),
-                                    ),
-                                    body: player,
-                                  );
-                                },
-                              )
-                            : Container()
-                        //  Image.asset(
-                        //           "Assets/Images/pictures/queen.jpg",
-                        //           fit: BoxFit.fitWidth,
-                        //           alignment: Alignment.topCenter,
-                        //         ),
-                        ),
+                        child: const HtmlWidget(
+                            '<iframe width="560" height="315" src="https://www.youtube.com/embed/9QM0hVaJbUI?si=GX0Ux0p0xT7lec-p" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>')),
                   ),
                 ),
                 const SizedBox(

@@ -128,8 +128,8 @@ class UserProvider extends ChangeNotifier {
         return;
       }
       Map userData = jsonDecode(res.body)[0];
-      connectedUser = {"user": userData};
-      prefs.setString('admin', jsonEncode(connectedUser));
+      connectedUser = {"admin": userData};
+      // prefs.setString('admin', jsonEncode(connectedUser));
       // ToastNotification.showToast(
       //     msg: "Connexion effectuée avec succès",
       //     msgType: MessageType.success,

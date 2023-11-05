@@ -23,7 +23,7 @@ class CustomRadioButton extends StatelessWidget {
       },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        child: Column(
+        child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
@@ -31,7 +31,7 @@ class CustomRadioButton extends StatelessWidget {
               style: TextStyle(color: textColor),
             ),
             const SizedBox(
-              height: 0,
+              width: 8,
             ),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),

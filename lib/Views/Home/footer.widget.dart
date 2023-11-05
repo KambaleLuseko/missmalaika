@@ -10,7 +10,21 @@ import 'package:url_launcher/url_launcher.dart';
 
 class FooterWidget extends StatelessWidget {
   FooterWidget({super.key});
-  final List sponsors = ['ozzone.jpeg', 'ozzone-prod.png', 'agrorecolt.png'];
+  final List sponsors = [
+    'ozzone.jpeg',
+    'ozzone-prod.png',
+    'agrorecolt.png',
+    'acpa.png',
+    'dn_design.jpg',
+    'goma_serena.jpg',
+    'hope_channel.png',
+    'if_logo.png',
+    'illicocash.png',
+    'JBC.jpg',
+    'kaziya_pale.png',
+    'mutzig_class.jpg',
+    'silimu.png'
+  ];
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -60,7 +74,7 @@ class FooterWidget extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(120),
                                       child: Image.asset(
                                           "Assets/Images/sponsors/${sponsors[index]}",
-                                          fit: BoxFit.cover),
+                                          fit: BoxFit.contain),
                                     ),
                                   ),
                                 ))
@@ -91,14 +105,13 @@ class FooterWidget extends StatelessWidget {
                 color: AppColors.kWhiteColor,
                 backColor: AppColors.kBlueColor,
                 icon: FontAwesomeIcons.facebookF,
-                url:
-                    "https://m.facebook.com/groups/missmalaika/permalink/648908160507603/"),
+                url: "https://www.facebook.com/MissMalaikaOzzone"),
             socialItem(
                 color: AppColors.kBlackColor,
                 backColor: AppColors.kWhiteColor,
                 icon: FontAwesomeIcons.instagram,
                 url:
-                    "https://m.facebook.com/groups/missmalaika/permalink/648908160507603/"),
+                    "https://instagram.com/miss_malaika_drc?igshid=MzRlODBiNWFlZA=="),
           ],
         ),
         Row(

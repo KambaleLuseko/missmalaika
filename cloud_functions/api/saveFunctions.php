@@ -9,24 +9,30 @@ class Save
 
             $msg["error"] = "";
             $msg["state"] = "";
-
+            $id  = isset($_POST['id']) && !empty($_POST['id']) ? trim(mysqli_real_escape_string(Constants::connect(), $_POST['id'])) : NULL;
             $eventName  = trim(mysqli_real_escape_string(constants::connect(), $_POST['eventName']));
             $eventDescription = trim(mysqli_real_escape_string(constants::connect(), $_POST['eventDescription']));
             $eventCategorie = trim(mysqli_real_escape_string(constants::connect(), $_POST['eventCategorie']));
             $eventDate = trim(mysqli_real_escape_string(constants::connect(), $_POST['eventDate']));
-            $startAt = trim(mysqli_real_escape_string(constants::connect(), $_POST['startAt']));
-            $endAt = trim(mysqli_real_escape_string(constants::connect(), $_POST['endAt']));
             $price = trim(mysqli_real_escape_string(constants::connect(), $_POST['price']));
-            $places = trim(mysqli_real_escape_string(constants::connect(), $_POST['places']));
+            $state = trim(mysqli_real_escape_string(constants::connect(), $_POST['state']));
+            $isActive = trim(mysqli_real_escape_string(constants::connect(), $_POST['isActive']));
 
-            if ($eventName == "" || $eventDescription == "" || $eventCategorie == "" || $eventDate == "" || $startAt == "" || $endAt == "" || $price == "" || $places == "") {
+            if ($eventName == "" || $eventDescription == "" || $eventCategorie == "" || $eventDate == "" || $price == "" || $state == "") {
                 $msg["error"] .= 'Donnees invalides';
             } else {
                 try {
-                    $querry1 = "INSERT INTO `events` (`eventName`, `eventDescription`, `eventCategorie`, `eventDate`, `startAt`, `endAt`, `price`, `places`) VALUES ('$eventName', '$eventDescription', '$eventCategorie', '$eventDate', '$startAt', '$endAt', '$price', '$places')";
-                    $res = mysqli_query(Constants::connect(), $querry1);
+                    $querry1 = "INSERT INTO `events` (`eventName`, `eventDescription`, `eventCategorie`, `eventDate`,  `price`, `state`) VALUES ('$eventName', '$eventDescription', '$eventCategorie', '$eventDate', '$price', '$state');";
+                    $query2 = "";
+                    if (isset($id) && !empty($id) && $id != NULL) {
+                        if ($isActive == 1 && isset($id) && !empty($id) && $id != NULL) {
+                            $query2 = "UPDATE `events` SET isActive=0;";
+                        }
+                        $querry1 = "INSERT INTO `events` (`id`,`eventName`, `eventDescription`, `eventCategorie`, `eventDate`,  `price`, `state`) VALUES ('$id','$eventName', '$eventDescription', '$eventCategorie', '$eventDate', '$price', '$state') ON DUPLICATE KEY UPDATE `eventName`='$eventName', `eventDescription`='$eventDescription', `eventCategorie`='$eventCategorie', `eventDate`='$eventDate', `price`='$price', `state`='$state', `isActive`='$isActive';";
+                    }
+                    $res = mysqli_multi_query(Constants::connect(), $querry1 . $query2);
                     if ($res) {
-                        $msg["state"] = "Event added successfuly";
+                        $msg["state"] = "success";
                     } else
                         $msg["error"] .= "Server error while saving";
                 } catch (Exception $e) {
@@ -163,57 +169,6 @@ class Save
         return $candidateID;
     }
 
-    public function candidatePayment()
-    {
-        $msg = array();
-        if (isset($_POST)) {
-            $msg["error"] = "";
-            $msg["state"] = "";
-            $ref_IDcarte = trim(mysqli_real_escape_string(Constants::connect(), $_POST['cardID']));
-            $agentID = trim(mysqli_real_escape_string(Constants::connect(), $_POST['agentID']));
-            $eventID = trim(mysqli_real_escape_string(Constants::connect(), $_POST['eventID']));
-
-            if ($ref_IDcarte == "" || $agentID == "" || $eventID == "") {
-                $msg["error"] .= 'Donnees invalides';
-            } else {
-                $checkCard = "select * from t_client where cardID='$ref_IDcarte';";
-                $response = mysqli_query(Constants::connect(), $checkCard);
-                if (mysqli_num_rows($response) < 1) {
-                    $msg["error"] .= "Cette carte n'existe pas";
-                } else {
-                    $checkUsageState = "select * from ticket_control where cardID='$ref_IDcarte' and eventID='$eventID';";
-                    $response = mysqli_query(Constants::connect(), $checkUsageState);
-                    if (mysqli_num_rows($response) >= 1) {
-                        $msg["error"] .= "Cette carte est déjà utilisé";
-                    } else {
-                        try {
-                            $query = "INSERT INTO `ticket_control`(eventID, agentID, cardID) values('$eventID', '$agentID', '$ref_IDcarte');";
-                            // $res=mysqli_query(Constants::connect(), $querry5);
-                            $res = mysqli_query(Constants::connect(), $query);
-                            if ($res) {
-                                $msg["state"] = "success";
-                                Constants::connect()->query("commit;");
-                            } else {
-                                var_dump(Constants::connect()->error);
-                                Constants::connect()->query("rollback;");
-                                $msg["error"] .= "Server error while saving";
-                            }
-                        } catch (Exception $e) {
-                            var_dump($e);
-                            $msg["error"] .= "Server error";
-                            Constants::connect()->query("rollback;");
-                        }
-                    }
-                }
-            }
-
-            mysqli_close(Constants::connect());
-        } else {
-            $msg['error'] .= 'Data not received';
-        }
-        echo json_encode($msg);
-    }
-
     public function saveNews()
     {
         $msg = array();
@@ -229,6 +184,7 @@ class Save
             $publisher = isset($_POST['publisher']) ? trim(mysqli_real_escape_string(constants::connect(), $_POST['publisher'])) : null;
             $uuid = isset($_POST['uuid']) ? trim(mysqli_real_escape_string(constants::connect(), $_POST['uuid'])) : rand(1000000, 1000000000000) . date('YmdHis');
             $image = isset($_POST['imageBytes']) && !empty($_POST['imageBytes']) ? trim(mysqli_real_escape_string(constants::connect(), $_POST['imageBytes'])) : null;
+            $oldPath = isset($_POST['image']) && !empty($_POST['image']) ? trim(mysqli_real_escape_string(constants::connect(), $_POST['image'])) : null;
             if (!isset($uuid) || empty($uuid)) {
                 $uuid = rand(10000, 1000000) . date('YmdHisv');
             }
@@ -246,14 +202,21 @@ class Save
                 try {
                     $fileName = '';
                     $path = "";
-                    if (isset($image)) {
+                    if (isset($image) && (!isset($id) && empty($id) && $id == NULL)) {
                         $fileName = 'news-' . rand(1000000, 1000000000000) . date('YmdHis') . '.png';
                         $path = "/uploads/$fileName";
                         file_put_contents('.' . $path, base64_decode($image));
+                    } else if (isset($image) && isset($oldPath) && !empty($oldPath) && (isset($id) && !empty($id) && $id != NULL)) {
+                        if (file_exists('.' . $oldPath)) {
+                            unlink('.' . $oldPath);
+                            // $fileName = 'news-' . rand(1000000, 1000000000000) . date('YmdHis') . '.png';
+                            // $path = "/uploads/$fileName";
+                            file_put_contents('.' . $oldPath, base64_decode($image));
+                        }
                     }
                     $querry1 = "INSERT INTO `news` (`title`, `summary`, `content`, `publisher`, `uuid`, `image`) VALUES ('$title', '$summary', '$content', '$publisher', '$uuid', '$path')";
                     if (isset($id) && !empty($id) && $id != NULL) {
-                        $querry1 = "INSERT INTO `news` (`id`,`title`, `summary`, `content`, `publisher`, `uuid`, `image`) VALUES ('$id','$title', '$summary', '$content', '$publisher', '$uuid', '$path') ON DUPLICATE KEY UPDATE `title`='$title', `summary`='$summary', `content`='$content'";
+                        $querry1 = "INSERT INTO `news` (`id`,`title`, `summary`, `content`, `publisher`, `uuid`, `image`) VALUES ('$id','$title', '$summary', '$content', '$publisher', '$uuid', '$path') ON DUPLICATE KEY UPDATE `title`='$title', `summary`='$summary', `content`='$content', `image`='$oldPath'";
                     }
                     $res = mysqli_query(Constants::connect(), $querry1);
                     if ($res) {

@@ -68,26 +68,33 @@ class Payment
 
         $paymentID = rand(10000, 1000000) . date('YmdHisv');
         if (strtolower($action) == 'inscription') {
-            $query1 = "INSERT INTO `candidate_payments` (`number`,`type`, `amount`, `currency`,`userUUID`, `event_id`, `payment_reference`) VALUES('$phonenumber', 'Mobile Money', '$amount', '$currency', '$userUUID', '$eventID', '$paymentID');";
+            $query1 = "INSERT INTO `candidate_payments` (`number`,`type`, `amount`, `currency`,`userUUID`, `event_id`, `payment_reference`) VALUES('$phonenumber', '$gateway', '$amount', '$currency', '$userUUID', '$eventID', '$paymentID');";
             $res = mysqli_query(Constants::connect(), $query1);
         } else if (strtolower($action) == 'vote') {
-            $query1 = "INSERT INTO `candidate_payments` (`number`,`type`, `amount`, `currency`,`userUUID`, `event_id`, `action`, `points`, `payment_reference`) VALUES('$phonenumber', 'Mobile Money', '$amount', '$currency', '$userUUID', '$eventID', '$action', '$points', '$paymentID');";
+            $query1 = "INSERT INTO `candidate_payments` (`number`,`type`, `amount`, `currency`,`userUUID`, `event_id`, `action`, `points`, `payment_reference`) VALUES('$phonenumber', '$gateway', '$amount', '$currency', '$userUUID', '$eventID', '$action', '$points', '$paymentID');";
             $res = mysqli_query(Constants::connect(), $query1);
         }
 
         if (strtolower(trim($gateway)) == 'mobile money') {
             MobilePayment::makePayment(["amount" => $amount, "currency" => $currency, "action" => $action, "paymentID" => $paymentID, "phonenumber" => $phonenumber, "userUUID" => $userUUID, "event_id" => $eventID]);
         } else if (strtolower(trim($gateway)) == 'illicocash') {
+            $step = isset($_REQUEST["step"]) ? $_REQUEST["step"] : "undefined"; // Get the step from the request parameters or set it to "undefined" if not provided
+            $otp = isset($_REQUEST["otp"]) ? $_REQUEST["otp"] : false; // Get the OTP from the request parameters or set it to false if not provided
+            $referenceNumber = isset($_REQUEST["referencenumber"]) ? $_REQUEST["referencenumber"] : $paymentID; // Get the reference number from the request parameters or set it to false if not provided
             function getApiUrl($defaultUrl, $step, $otp = false, $referenceNumber = false)
             {
                 if ($otp !== false && $referenceNumber !== false && $step === "terminate") {
+                    // $req = "";
+                    // if (strtolower($action) == 'inscription') {
+                    //     $req .= "UPDATE  `event_candidates` SET isActive=2 WHERE candidate_uuid='$userUUID' AND event_id='$eventID';";
+                    // }
+                    // $req .= "UPDATE  `candidate_payments`SET isPayed=1 WHERE userUUID='$userUUID' AND event_id='$eventID' AND payment_reference='$reference';";
+                    // $res = mysqli_multi_query(Constants::connect(), $req);
                     return $defaultUrl . "/" . $otp . "/" . $referenceNumber; // If OTP, reference number, and step are provided for termination, append them to the default URL
                 }
                 return $defaultUrl; // Otherwise, return the default URL
             }
-            $step = isset($_REQUEST["step"]) ? $_REQUEST["step"] : "undefined"; // Get the step from the request parameters or set it to "undefined" if not provided
-            $otp = isset($_REQUEST["otp"]) ? $_REQUEST["otp"] : false; // Get the OTP from the request parameters or set it to false if not provided
-            $referenceNumber = isset($_REQUEST["referencenumber"]) ? $_REQUEST["referencenumber"] : false; // Get the reference number from the request parameters or set it to false if not provided
+
 
             $apiUrl = getApiUrl("https://new.rawbankillico.com:4004/RAWAPIGateway/ecommerce/payment", $step, $otp, $referenceNumber); // Generate the API URL based on the provided step, OTP, and reference number
             $merchantId = "merch0000000000001201"; // Set the merchant ID

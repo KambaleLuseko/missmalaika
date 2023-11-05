@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:missmalaika/Views/Admin/Events/event.page.dart';
 
 import '../../Resources/Components/reusable.dart';
 import '../../Resources/Constants/global_variables.dart';
@@ -22,7 +23,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
     super.initState();
   }
 
-  List<String> titles = ["Dashboard", "Articles", "Galerie"];
+  List<String> titles = ["Dashboard", "Articles", "Galerie", "Evénements"];
   List<MenuModel> pages = [
     MenuModel(
       title: 'Dashboard',
@@ -35,6 +36,10 @@ class _AdminMainPageState extends State<AdminMainPage> {
     MenuModel(
       title: 'Galerie',
       page: const GaleryPage(),
+    ),
+    MenuModel(
+      title: 'Evénements',
+      page: const EventPage(),
     ),
   ];
   handleMenuChange(value) {
